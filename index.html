@@ -302,11 +302,10 @@ Refresh
 <div class="sec-hero">
 <div>
 <div class="sec-hero-title">Enrollment &amp; SLA</div>
-<div class="sec-hero-sub">Enrollment and activation · Programme phase and type · Starting conditions</div>
+<div class="sec-hero-sub">Programme phase and type · Starting conditions</div>
 </div>
 </div>
-<div class="kgrid" id="enr-kpis"></div>
-<div class="g2" style="margin-top:14px">
+<div class="g2">
 <div class="card">
 <div class="chead">
 <h3>Programme Phase
@@ -1599,15 +1598,6 @@ var val=fmt(mc.reducedOrEliminatedPct)+'%';
 return sig('💊',val,'Medicine Titration','Reduced '+mc.reducedCount+' · Eliminated '+mc.eliminatedCount+' · of '+mc.total,'good');
 })();
 })();
-
-var _enrK=document.getElementById('enr-kpis');
-if(_enrK)_enrK.innerHTML=
-kpi('Total Enrolled',enAgg.total,'All statuses','','blue',false,'👥')+
-kpi('Active Members',enAgg.active,'Status = ACTIVE','','teal',false,'✅')+
-kpi('Pending Activation',enAgg.pending,'Status = PENDING_ACTIVE','','amber',true,'⏳')+
-kpi('Activation Rate',parseFloat(enAgg.activationRate).toFixed(1)+'%','Active ÷ total','','green',true,'🎯')+
-kpi('Avg Days',function(){var d=members.map(function(r){return parseFloat(r.days);}).filter(function(v){return !isNaN(v)&&v>=0;});return d.length?Math.round(d.reduce(function(a,b){return a+b;},0)/d.length)+'d':'—';}(),'Since activation','','blue',true,'📅')+
-kpi('Programme Phases',Object.keys(enAgg.progPhases||{}).length,'Active phases','','purple',true,'📋');
 
 function bdl(obj,id,mapFn){
 var el=document.getElementById(id);if(!el)return;
