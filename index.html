@@ -235,6 +235,31 @@ footer p{font-size:11px;color:var(--c-muted2);line-height:1.7}
 .bio-seg-btn{background:var(--c-bg3);border:1px solid var(--c-border2);border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;color:var(--c-text);cursor:pointer;transition:.15s;font-family:inherit}
 .bio-seg-btn:hover{background:rgba(45,64,121,.12)}
 .bio-seg-btn.active{background:var(--c-accent);border-color:var(--c-accent);color:#FFFFFF}
+/* ---- health intelligence sections ---- */
+.hi-sbar{display:flex;gap:2px;height:12px;min-width:150px}
+.hi-sbar span{min-width:3px;cursor:default}
+.hi-sbar span:first-child{border-top-left-radius:4px;border-bottom-left-radius:4px}
+.hi-sbar span:last-child{border-top-right-radius:4px;border-bottom-right-radius:4px}
+.hi-legend{display:flex;flex-wrap:wrap;gap:14px;padding:10px 18px 14px;font-size:10.5px;color:var(--c-muted);border-top:1px solid var(--c-border)}
+.hi-legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.hi-mixrow{display:grid;grid-template-columns:minmax(170px,260px) 1fr 140px;align-items:center;gap:16px;padding:12px 18px;border-bottom:1px solid var(--c-border)}
+.hi-mixrow .ml{font-size:12.5px;color:var(--c-text);font-weight:600}
+.hi-mixrow .ms{display:block;font-size:10.5px;color:var(--c-muted);font-weight:400;margin-top:2px}
+.hi-mixrow .mn{font-family:var(--mono);font-size:10.5px;color:var(--c-muted);text-align:right}
+.hi-note{font-size:11.5px;color:var(--c-muted);margin:-6px 0 12px;line-height:1.6}
+.hi-insight{display:grid;grid-template-columns:1fr 1fr}
+.hi-insight>div{padding:16px 18px;font-size:12.5px;line-height:1.7;color:var(--c-text)}
+.hi-insight>div+div{border-left:1px solid var(--c-border)}
+.hi-insight h4{font-size:10px;font-weight:700;color:#6A6F8A;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
+.hi-insight b{color:#2D4079}
+.hi-hbar{display:grid;grid-template-columns:minmax(220px,360px) 1fr 120px;align-items:center;gap:16px;padding:11px 18px;border-bottom:1px solid var(--c-border)}
+.hi-hbar .track{height:12px;background:#F4F1F6;border-radius:4px;overflow:hidden}
+.hi-hbar .fill{height:100%;background:#2D4079;border-radius:4px}
+.hi-hbar .hl{font-size:12.5px;color:var(--c-text)}
+.hi-hbar .hn{font-family:var(--mono);font-size:10.5px;color:var(--c-muted);text-align:right}
+td .hi-sub{display:block;font-size:10.5px;color:var(--c-muted);margin-top:2px}
+.kgrid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:900px){.hi-insight{grid-template-columns:1fr}.hi-insight>div+div{border-left:none;border-top:1px solid var(--c-border)}.hi-mixrow,.hi-hbar{grid-template-columns:1fr}.hi-mixrow .mn,.hi-hbar .hn{text-align:left}.kgrid-4{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -245,7 +270,7 @@ footer p{font-size:11px;color:var(--c-muted2);line-height:1.7}
 <div class="brand-logo">SP</div>
 <div>
 <div class="brand-name">Sample Partner <em>×</em> Twin Health</div>
-<div class="brand-sub">Partner Governance Dashboard</div>
+<div class="brand-sub">Digital Twin Health Intelligence · All Members</div>
 </div>
 </div>
 <div class="topbar-r">
@@ -267,7 +292,7 @@ Refresh
 <button class="tab" id="tab-t5" onclick="sw('t5',this)">Clinical Outcomes &amp; Scores</button>
 <button class="tab" id="tab-t7" onclick="sw('t7',this)">Coaching Quality</button>
 <button class="tab" id="tab-t8" onclick="sw('t8',this)">Cohort Analysis</button>
-<button class="tab" id="tab-t10" onclick="sw('t10',this)">M4PI</button>
+<button class="tab" id="tab-t10" onclick="sw('t10',this)">Cardiometabolic Risk Score (CRS)</button>
 <button class="tab" id="tab-t12" onclick="sw('t12',this)">MHQ &amp; Facial Scan</button>
 </div>
 
@@ -305,6 +330,13 @@ Refresh
 <span><b style="background:#2D4079"></b> Meal Logging %</span>
 <span><b style="background:#1F8F4E"></b> GFY %</span>
 </div>
+</div>
+
+<div class="sec"><h2>Health Scores</h2><span class="sec-tag">Digital Twin Health Intelligence</span><div class="sec-line"></div></div>
+<div class="kgrid-4" id="hiOvKpis"></div>
+<div class="card" style="margin-top:14px">
+<div class="chead"><h3>Digital Twin Insight</h3><span class="cnote">Latest value of each Cardiometabolic Risk Score marker</span></div>
+<div class="hi-insight" id="hiInsight"></div>
 </div>
 </div>
 
@@ -411,6 +443,22 @@ matching values are not repeated elsewhere on this tab.
 <div id="engAdhDetail"></div>
 </div>
 
+
+<div class="sec"><h2>Nutrition, Movement &amp; Sleep vs Target</h2><span class="sec-tag">First 30 days vs latest 30 days</span><div class="sec-line"></div></div>
+<p class="hi-note" id="hiEngNote"></p>
+<div class="card">
+<div class="chead"><h3>Habits vs Target <span class="tip" data-tip="Status compares each member's latest 30 days with their target: Good = at or above target, Progressing = 80–99%, Active Focus = 60–79%, Priority Focus = below 60%.">?</span></h3></div>
+<div class="twrap"><table>
+<thead><tr><th>Habit</th><th class="ctr">First 30 days</th><th class="ctr">Latest 30 days</th><th class="ctr">Change</th><th class="ctr">Target</th><th class="ctr">At target (first → latest)</th><th>Status now</th><th class="ctr">Members</th></tr></thead>
+<tbody id="hiEngTbl"></tbody>
+</table></div>
+<div class="hi-legend" id="hiEngLegend"></div>
+</div>
+<div class="card">
+<div class="chead"><h3>Members at Target — First 30 Days vs Latest 30 Days</h3><span class="cnote">% of members with data for each habit</span></div>
+<div class="chart-wrap" style="height:280px"><canvas id="hiEngChart"></canvas></div>
+<div class="chart-legend"><span><b style="background:rgba(45,64,121,.28)"></b> First 30 days</span><span><b style="background:#2D4079"></b> Latest 30 days</span></div>
+</div>
 </div>
 
 <div class="panel" id="t5">
@@ -535,6 +583,10 @@ matching values are not repeated elsewhere on this tab.
 
 <div style="font-size:9px;font-weight:700;letter-spacing:.1em;color:#6A6F8A;text-transform:uppercase;margin-bottom:12px;padding-left:2px">Organ System Health Scores</div>
 <div class="organ-grid" id="organRadialGrid"></div>
+
+<div class="sec"><h2>10-Year Heart Risk (PREVENT)</h2><span class="sec-tag" id="hiPrevTag"></span><div class="sec-line"></div></div>
+<p class="hi-note">Chance of a heart attack, stroke or heart failure in the next 10 years, from age, blood pressure, cholesterol, blood-sugar control and kidney function. Lower is better.</p>
+<div class="card" id="hiPrevCard"></div>
 </div>
 
 <div class="panel" id="t7">
@@ -599,49 +651,43 @@ matching values are not repeated elsewhere on this tab.
 <div class="chead"><h3>Progress to 100 Members</h3></div>
 <div class="chart-wrap" style="height:200px"><canvas id="pilotChart"></canvas></div>
 </div>
+
+<div class="sec"><h2>Where Each System Stands</h2><span class="sec-tag">Latest readings</span><div class="sec-line"></div></div>
+<div class="card"><div id="hiSysMix"></div><div class="hi-legend" id="hiSysLegend"></div></div>
+<div class="sec"><h2>Where the Numbers Lean</h2><span class="sec-tag">Early leanings, not diagnoses</span><div class="sec-line"></div></div>
+<div class="card"><div id="hiLeanMix"></div><div class="hi-legend" id="hiLeanLegend"></div></div>
 </div>
 
 <div class="panel" id="t10">
 <div class="sec-hero">
 <div>
-<div class="sec-hero-title">Metabolic Four-Pillar Index (M4PI)</div>
-<div class="sec-hero-sub">One systems index and the four pillars beneath it — cohort average at baseline and today</div>
+<div class="sec-hero-title">Cardiometabolic Risk Score (CRS)</div>
+<div class="sec-hero-sub">Ten metabolic markers weighed into one 0–100 score · lower is better · shown as Stage 0 to 3</div>
 </div>
-<div class="sec-hero-tag">Baseline → Current</div>
+<div class="sec-hero-tag">Start → Now</div>
 </div>
-
 <div class="g2">
 <div class="card">
-<div class="chead"><h3>M4PI — cohort average</h3><span class="cnote" id="m4GaugeNote"></span></div>
-<div id="m4Gauge" style="padding:14px 18px 20px;display:flex;flex-direction:column;align-items:center"></div>
+<div class="chead"><h3>CRS — Cohort Average <span class="tip" data-tip="Stage 0 (0–14) minimal · Stage 1 (15–34) early / at risk · Stage 2 (35–59) established · Stage 3 (60–100) high / advanced. It stratifies risk early; it is not a diagnosis.">?</span></h3><span class="cnote" id="hiCrsGaugeNote"></span></div>
+<div id="hiCrsGauge" style="display:flex;flex-direction:column;align-items:center;padding:18px 18px 6px"></div>
 </div>
 <div class="card">
-<div class="chead"><h3>M4PI and the four pillars — baseline vs current</h3></div>
-<div class="chart-wrap" style="height:262px"><canvas id="m4Chart"></canvas></div>
-<div class="chart-legend"><span><b style="background:rgba(45,64,121,.28)"></b> Baseline</span><span><b style="background:#2D4079"></b> Current</span></div>
+<div class="chead"><h3>Members Optimal per Marker — Start vs Now</h3></div>
+<div class="chart-wrap" style="height:300px"><canvas id="hiCrsChart"></canvas></div>
+<div class="chart-legend"><span><b style="background:rgba(45,64,121,.28)"></b> At start</span><span><b style="background:#1F8F4E"></b> Now</span></div>
 </div>
 </div>
-
-<div class="sec"><h2>The four pillars behind the M4PI</h2><span class="sec-tag" id="m4PillarTag"></span><div class="sec-line"></div></div>
 <div class="card">
-<div class="twrap">
-<table>
-<thead><tr><th>Pillar</th><th class="ctr">Baseline</th><th class="ctr">Current</th><th class="ctr">Change</th><th class="ctr">Status <span class="tip" data-tip="Status is the band of the current cohort average: Optimal 85–100 · Good 70–84 · Healing 55–69 · Early Healing 35–54 · Building Momentum 0–34.">?</span></th><th>What it means</th></tr></thead>
-<tbody id="m4PillarTbl"></tbody>
-</table>
+<div class="chead"><h3>Stage Mix — Start vs Now</h3></div>
+<div id="hiCrsMix"></div>
 </div>
-</div>
-
-<div class="sec"><h2>The Twin Index Library</h2><span class="sec-tag" id="m4LibTag"></span><div class="sec-line"></div></div>
-<p style="font-size:12px;color:var(--c-muted);margin:-6px 0 12px">Each composite index, baseline to current, with a plain-language meaning.</p>
-<div class="card">
-<div class="twrap">
-<table>
-<thead><tr><th>Index</th><th class="ctr">Baseline</th><th class="ctr">Current</th><th class="ctr">Change</th><th class="ctr">Status <span class="tip" data-tip="Status is the band of the current cohort average: Optimal 85–100 · Good 70–84 · Healing 55–69 · Early Healing 35–54 · Building Momentum 0–34.">?</span></th><th>What it means</th></tr></thead>
-<tbody id="m4LibTbl"></tbody>
-</table>
-</div>
-</div>
+<div class="sec"><h2>The Ten Markers Behind the Score</h2><span class="sec-tag" id="hiCrsTag"></span><div class="sec-line"></div></div>
+<p class="hi-note">Start and now are averages for members with a first and a follow-up blood test. The flag mix uses each member's latest value, against ranges set for sex and Asian-Indian background. TyG and METS-IR carry a little more weight, so early insulin resistance is caught before blood sugar rises.</p>
+<div class="card"><div class="twrap"><table>
+<thead><tr><th>Marker</th><th class="ctr">Start</th><th class="ctr">Now</th><th class="ctr">Change</th><th>Healthy range</th><th>Flag mix now</th><th class="ctr">Paired</th></tr></thead>
+<tbody id="hiCrsTbl"></tbody>
+</table></div>
+<div class="hi-legend" id="hiFlagLegend"></div></div>
 </div>
 
 <div class="panel" id="t12">
@@ -724,7 +770,7 @@ matching values are not repeated elsewhere on this tab.
 </div>
 
 <footer>
-<p>Sample Partner × Twin Health · Partner Governance Dashboard · Sample build<br>
+<p>Sample Partner × Twin Health · Digital Twin Health Intelligence · Sample build<br>
 Sample dashboard — every figure is synthetic; no member information is held in this page.</p>
 </footer>
 
@@ -2002,124 +2048,116 @@ return'<tr><td><strong>'+esc(k)+'</strong></td><td style="color:var(--c-muted);f
 }).join('')||'<tr><td colspan="7" style="text-align:center;color:var(--c-muted);padding:16px">No medication data for this selection.</td></tr>';
 }
 
-/* ---------------- Metabolic Four-Pillar Index (M4PI) tab ----------------
-   Baseline = the member's first full week on the programme; Current = the latest week.
-   Cohort averages are like-for-like: only members with both readings are counted. */
-var M4_BANDS=[
-{l:'Optimal',lo:85,cls:'met',c:'#1F8F4E'},
-{l:'Good',lo:70,cls:'active-b',c:'#5FA83A'},
-{l:'Healing',lo:55,cls:'risk',c:'#E0A21F'},
-{l:'Early Healing',lo:35,cls:'risk',c:'#E8852C'},
-{l:'Building Momentum',lo:0,cls:'breach',c:'#D63B55'}
-];
-var M4_PILLARS=[
-{key:'p1',label:'P1: Mito Performance',desc:'How efficiently cells produce and use energy'},
-{key:'p2',label:'P2: Cellular Resilience',desc:'How well cells cope with and recover from stress'},
-{key:'p3',label:'P3: Metabolic Markers',desc:'The state of core metabolic health markers'},
-{key:'p4',label:'P4: Adaptive Resilience',desc:'How well the body handles stress and bounces back'},
-{key:'m4pi',label:'M4PI (overall)',desc:'The systems composite',total:true}
-];
-var M4_LIBRARY=[
-{key:'cers',label:'CeRS · Cellular Resilience',desc:'How well cells recover and hold up under stress'},
-{key:'hrs',label:'HRS · Heart Resilience',desc:'How resilient and well-regulated the heart is'},
-{key:'osbs',label:'OSBS · Oxidative Stress Balance',desc:'How well the body manages oxidative stress'},
-{key:'mfs',label:'MFS · Metabolic Flexibility',desc:'How easily the body switches between burning carbs and fat'},
-{key:'abs',label:'ABS · Autonomic Balance',desc:'How balanced the nervous system is between stress and rest'},
-{key:'rcs',label:'RCS · Recovery Capacity',desc:'How well the body recovers and repairs, especially overnight'},
-{key:'ils',label:'ILS · Inflammatory Load',desc:'How much low-grade inflammation the body is carrying (higher = calmer)'},
-{key:'twmpi',label:'TWMPI (Overall) · Overall Mitochondrial Performance',desc:'Overall cellular energy performance'},
-{key:'cmei',label:'CMEI · Cardio-Mitochondrial Efficiency',desc:'How efficiently the heart and cells use energy in activity'},
-{key:'assi',label:'ASSI · Autonomic Stability',desc:'How steady and well-regulated the nervous system is'},
-{key:'rri',label:'RRI · Recovery & Repair',desc:'How well the body recovers and repairs overnight'},
-{key:'mwci',label:'MWCI · Metabolic Work Capacity',desc:'How much sustained metabolic work the body can do'},
-{key:'smli',label:'SMLI · Structural Metabolic Load',desc:'The metabolic strain linked to body composition'}
-];
+/* ---------------- Health intelligence: Cardiometabolic Risk Score, 10-year heart risk, habits vs target, systems ---------------- */
+var HI={"asOf":"2026-10-23","n":105,"followup":27,"crs":{"b":58.8,"c":54.7,"n":105,"stagesB":{"Stage 0":0,"Stage 1":5,"Stage 2":48,"Stage 3":52},"stagesC":{"Stage 0":0,"Stage 1":13,"Stage 2":50,"Stage 3":42},"lower":23,"rows":[{"key":"tyg","label":"TyG index","desc":"An early sign of insulin resistance","ref":"< 8.5","dec":2,"unit":"","weight":1.6,"b":8.99,"c":8.75,"n":27,"flagsB":{"Optimal":9,"Watch":36,"Elevated":60},"flagsNow":{"Optimal":13,"Watch":40,"Elevated":52}},{"key":"metsir","label":"METS-IR","desc":"Insulin resistance seen alongside body size","ref":"< 40","dec":1,"unit":"","weight":1.4,"b":48.4,"c":42.3,"n":27,"flagsB":{"Optimal":31,"Watch":38,"Elevated":36},"flagsNow":{"Optimal":35,"Watch":40,"Elevated":30}},{"key":"waist","label":"Waist circumference","desc":"Fat stored around the middle (from the Twin scan)","ref":"< 90 men · < 80 women","dec":1,"unit":"cm","weight":1.2,"b":92.9,"c":91.4,"n":25,"flagsB":{"Optimal":33,"Watch":31,"Elevated":41},"flagsNow":{"Optimal":34,"Watch":32,"Elevated":39}},{"key":"tghdl","label":"Triglyceride / HDL ratio","desc":"Blood fats against \"good\" cholesterol","ref":"< 2.0","dec":2,"unit":"","weight":1.0,"b":3.51,"c":2.96,"n":27,"flagsB":{"Optimal":13,"Watch":42,"Elevated":50},"flagsNow":{"Optimal":16,"Watch":44,"Elevated":45}},{"key":"hba1c","label":"HbA1c","desc":"Average blood sugar over about three months","ref":"< 5.7","dec":2,"unit":"%","weight":1.0,"b":7.06,"c":6.38,"n":27,"flagsB":{"Optimal":15,"Watch":20,"Elevated":70},"flagsNow":{"Optimal":21,"Watch":19,"Elevated":65}},{"key":"fpg","label":"Fasting glucose","desc":"Blood sugar after an overnight fast","ref":"< 100","dec":0,"unit":"mg/dL","weight":0.9,"b":119.0,"c":108.0,"n":27,"flagsB":{"Optimal":23,"Watch":41,"Elevated":41},"flagsNow":{"Optimal":25,"Watch":43,"Elevated":37}},{"key":"alt","label":"ALT / SGPT","desc":"An early signal of fat or strain in the liver","ref":"< 30 men · < 25 women","dec":0,"unit":"U/L","weight":0.7,"b":30.0,"c":28.0,"n":27,"flagsB":{"Optimal":39,"Watch":64,"Elevated":2},"flagsNow":{"Optimal":43,"Watch":60,"Elevated":2}},{"key":"nonhdl","label":"Non-HDL cholesterol","desc":"The cholesterol most linked to artery build-up","ref":"< 130","dec":0,"unit":"mg/dL","weight":0.8,"b":153.0,"c":139.0,"n":27,"flagsB":{"Optimal":35,"Watch":31,"Elevated":39},"flagsNow":{"Optimal":38,"Watch":33,"Elevated":34}},{"key":"bmi","label":"BMI","desc":"Weight in proportion to height","ref":"< 23 (Asian-Indian)","dec":1,"unit":"kg/m²","weight":0.8,"b":30.7,"c":27.6,"n":27,"flagsB":{"Optimal":16,"Watch":13,"Elevated":76},"flagsNow":{"Optimal":22,"Watch":17,"Elevated":66}},{"key":"esr","label":"ESR","desc":"A general marker of inflammation","ref":"< 15 men · < 20 women","dec":0,"unit":"mm/hr","weight":0.6,"b":15.0,"c":14.0,"n":27,"flagsB":{"Optimal":71,"Watch":34,"Elevated":0},"flagsNow":{"Optimal":75,"Watch":30,"Elevated":0}}],"signals":[{"label":"BMI","pct":63},{"label":"HbA1c","pct":62},{"label":"TyG index","pct":50}],"strengths":[{"label":"ESR","pct":71},{"label":"ALT / SGPT","pct":41},{"label":"Non-HDL cholesterol","pct":36}]},"prevent":{"b":8.4,"c":5.7,"n":27,"catsB":{"Low":12,"Borderline":5,"Intermediate":9,"High":1},"catsC":{"Low":15,"Borderline":8,"Intermediate":3,"High":1}},"eng":{"n":51,"from":"2026-09-24","to":"2026-10-23","rows":[{"key":"macro","label":"Macro nutrients score","unit":"","target":"≥ 80","dec":0,"n":51,"b":63.0,"l":68.0,"atB":6,"atL":20,"status":{"Good":10,"Progressing":22,"Active Focus":18,"Priority Focus":1}},{"key":"micro","label":"Micro nutrients score","unit":"","target":"≥ 70","dec":0,"n":51,"b":64.0,"l":68.0,"atB":27,"atL":41,"status":{"Good":21,"Progressing":20,"Active Focus":10,"Priority Focus":0}},{"key":"biota","label":"Biota nutrients score","unit":"","target":"≥ 70","dec":0,"n":51,"b":61.0,"l":64.0,"atB":12,"atL":29,"status":{"Good":15,"Progressing":23,"Active Focus":12,"Priority Focus":1}},{"key":"protein","label":"Protein intake","unit":"g","target":"own target (≈ 0.875 g per kg)","dec":0,"n":51,"b":55.0,"l":61.0,"atB":4,"atL":16,"status":{"Good":8,"Progressing":18,"Active Focus":19,"Priority Focus":6}},{"key":"fiber","label":"Fibre intake","unit":"g","target":"≥ 19 g","dec":0,"n":51,"b":16.0,"l":18.0,"atB":25,"atL":51,"status":{"Good":26,"Progressing":11,"Active Focus":6,"Priority Focus":8}},{"key":"steps","label":"Steps (daily average)","unit":"","target":"≥ 5,000","dec":0,"n":44,"b":4292.0,"l":5048.0,"atB":30,"atL":50,"status":{"Good":22,"Progressing":11,"Active Focus":4,"Priority Focus":7}},{"key":"sleep","label":"Sleep (main sleep)","unit":"h","target":"≥ 7 h","dec":1,"n":32,"b":6.5,"l":6.8,"atB":19,"atL":41,"status":{"Good":13,"Progressing":18,"Active Focus":1,"Priority Focus":0}}]},"systems":[{"label":"Metabolic","basis":"Cardiometabolic Risk Score stage","n":105,"mix":{"Good":13,"Watch":50,"Focus":42}},{"label":"Heart","basis":"Blood pressure and resting heart rate (Twin scan)","n":99,"mix":{"Good":7,"Watch":56,"Focus":36}},{"label":"Recovery & nervous system","basis":"Heart-rate variability and stress index (Twin scan)","n":99,"mix":{"Good":9,"Watch":57,"Focus":33}},{"label":"Body composition","basis":"BMI and waist","n":105,"mix":{"Good":8,"Watch":77,"Focus":20}},{"label":"Mental wellbeing","basis":"PHQ-9, GAD-7 and PSS-10 check-ins","n":97,"mix":{"Good":7,"Watch":60,"Focus":30}},{"label":"Daily activity","basis":"Daily steps","n":44,"mix":{"Good":22,"Watch":15,"Focus":7}}],"leans":[{"label":"Type 2 Diabetes","basis":"HbA1c and fasting glucose","n":105,"mix":{"Low":12,"Moderate":25,"Moderate–High":23,"High":45}},{"label":"Metabolic syndrome","basis":"Waist, lipids, blood pressure and glucose together","n":105,"mix":{"Low":10,"Moderate":25,"Moderate–High":70,"High":0}},{"label":"Blood pressure","basis":"Latest blood pressure","n":105,"mix":{"Low":12,"Moderate":11,"Moderate–High":47,"High":35}},{"label":"Fatty liver (MASLD)","basis":"ALT and triglycerides","n":105,"mix":{"Low":43,"Moderate":49,"Moderate–High":13,"High":0}},{"label":"Heart (long-term)","basis":"10-year heart risk (PREVENT)","n":105,"mix":{"Low":52,"Moderate":25,"Moderate–High":26,"High":2}}]};
+(function(){
+var GREEN='#1F8F4E',LGREEN='#8CC152',AMBER='#E0A21F',ORANGE='#E8852C',RED='#D63B55';
+var FLAG=['Optimal','Watch','Elevated'],FLAG_COL={Optimal:GREEN,Watch:AMBER,Elevated:RED,Low:RED};
+var STAGES=['Stage 0','Stage 1','Stage 2','Stage 3'],STAGE_COL={'Stage 0':GREEN,'Stage 1':LGREEN,'Stage 2':ORANGE,'Stage 3':RED};
+var PCATS=['Low','Borderline','Intermediate','High'],PCAT_COL={Low:GREEN,Borderline:AMBER,Intermediate:ORANGE,High:RED};
+var STATUS=['Good','Progressing','Active Focus','Priority Focus'],STATUS_COL={'Good':GREEN,'Progressing':LGREEN,'Active Focus':AMBER,'Priority Focus':RED};
+var SYSL=['Good','Watch','Focus'],SYS_COL={Good:GREEN,Watch:AMBER,Focus:RED};
+var LEANS=['Low','Moderate','Moderate–High','High'],LEAN_COL={'Low':GREEN,'Moderate':AMBER,'Moderate–High':ORANGE,'High':RED};
+function e(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function f(v,d){if(v==null||isNaN(v))return'—';d=d||0;return Number(v).toLocaleString('en-IN',{minimumFractionDigits:d,maximumFractionDigits:d});}
+function p(n,t){return t?Math.round(n/t*100):0;}
+function set(id,h){var el=document.getElementById(id);if(el)el.innerHTML=h;}
+function txt(id,s){var el=document.getElementById(id);if(el)el.textContent=s;}
+function chg(b,c,d,lowerBetter){
+if(b==null||c==null)return'<span style="color:var(--c-muted)">—</span>';
+var x=c-b,eps=Math.pow(10,-(d||0))/2;if(Math.abs(x)<eps)x=0;
+var col=(x===0||lowerBetter==null)?'#6A6F8A':((lowerBetter?x<0:x>0)?GREEN:RED);
+return'<span style="color:'+col+';font-weight:700">'+(x>0?'+':x<0?'−':'')+f(Math.abs(x),d)+'</span>';
+}
+function tot(m,o){return o.reduce(function(a,k){return a+(m[k]||0);},0);}
+function sbar(m,o,col){var t=tot(m,o);if(!t)return'<div class="hi-sbar"><span style="flex:1 1 0;background:#F4F1F6"></span></div>';
+return'<div class="hi-sbar">'+o.filter(function(k){return m[k]>0;}).map(function(k){return'<span style="flex:'+m[k]+' 1 0;background:'+col[k]+'" title="'+e(k+': '+m[k]+' members ('+p(m[k],t)+'%)')+'"></span>';}).join('')+'</div>';}
+function mixText(m,o){var t=tot(m,o);return o.filter(function(k){return m[k]>0;}).map(function(k){return e(k)+' '+p(m[k],t)+'%';}).join(' · ');}
+function leg(o,col,lab){return o.map(function(k){return'<span><i style="background:'+col[k]+'"></i>'+e((lab&&lab[k])||k)+'</span>';}).join('');}
+function mixRow(label,sub,m,o,col,right){return'<div class="hi-mixrow"><div class="ml">'+e(label)+(sub?'<span class="ms">'+e(sub)+'</span>':'')+'</div>'+sbar(m,o,col)+'<div class="mn">'+right+'</div></div>';}
+function stageOf(v){return v==null?'—':v<15?'Stage 0':v<35?'Stage 1':v<60?'Stage 2':'Stage 3';}
+var STAGE_LAB={'Stage 0':'Stage 0 · minimal (0–14)','Stage 1':'Stage 1 · early / at risk (15–34)','Stage 2':'Stage 2 · established (35–59)','Stage 3':'Stage 3 · high / advanced (60–100)'};
 
-function m4Band(v){if(v==null)return null;for(var i=0;i<M4_BANDS.length;i++){if(v>=M4_BANDS[i].lo)return M4_BANDS[i];}return M4_BANDS[M4_BANDS.length-1];}
-function m4r1(v){return v==null?null:Math.round(v*10)/10;}
-
-function m4GaugeSvg(v){
+function crsGauge(v){
 var cx=150,cy=150,r=112,w=26;
-function pt(deg,rad){var a=deg*Math.PI/180;return [cx+rad*Math.cos(a),cy-rad*Math.sin(a)];}
-function arc(lo,hi,col){
-var a1=180-lo*1.8+(lo>0?0.8:0),a2=180-hi*1.8-(hi<100?0.8:0);
-var p1=pt(a1,r),p2=pt(a2,r);
-return'<path d="M'+p1[0].toFixed(1)+' '+p1[1].toFixed(1)+' A'+r+' '+r+' 0 0 1 '+p2[0].toFixed(1)+' '+p2[1].toFixed(1)+'" fill="none" stroke="'+col+'" stroke-width="'+w+'"/>';
-}
-var segs=arc(0,35,'#D63B55')+arc(35,55,'#E8852C')+arc(55,70,'#F2B53A')+arc(70,85,'#8CC152')+arc(85,100,'#1F8F4E');
-var needle='';
-if(v!=null){
-var tip=pt(180-Math.max(0,Math.min(100,v))*1.8,r-30);
-needle='<line x1="'+cx+'" y1="'+cy+'" x2="'+tip[0].toFixed(1)+'" y2="'+tip[1].toFixed(1)+'" stroke="#373049" stroke-width="5" stroke-linecap="round"/><circle cx="'+cx+'" cy="'+cy+'" r="9" fill="#2D4079"/>';
-}
-return'<svg viewBox="0 0 300 168" style="width:100%;max-width:330px;display:block">'+segs+needle+'</svg>';
+function pt(deg,rad){var a=deg*Math.PI/180;return[cx+rad*Math.cos(a),cy-rad*Math.sin(a)];}
+function arc(lo,hi,col){var a1=180-lo*1.8+(lo>0?0.8:0),a2=180-hi*1.8-(hi<100?0.8:0),p1=pt(a1,r),p2=pt(a2,r);
+return'<path d="M'+p1[0].toFixed(1)+' '+p1[1].toFixed(1)+' A'+r+' '+r+' 0 0 1 '+p2[0].toFixed(1)+' '+p2[1].toFixed(1)+'" fill="none" stroke="'+col+'" stroke-width="'+w+'"/>';}
+var s=arc(0,15,GREEN)+arc(15,35,LGREEN)+arc(35,60,ORANGE)+arc(60,100,RED),nd='';
+if(v!=null){var tip=pt(180-Math.max(0,Math.min(100,v))*1.8,r-30);nd='<line x1="'+cx+'" y1="'+cy+'" x2="'+tip[0].toFixed(1)+'" y2="'+tip[1].toFixed(1)+'" stroke="#373049" stroke-width="5" stroke-linecap="round"/><circle cx="'+cx+'" cy="'+cy+'" r="9" fill="#2D4079"/>';}
+return'<svg viewBox="0 0 300 168" style="width:100%;max-width:330px;display:block">'+s+nd+'</svg>';
 }
 
-var m4LabelPlugin={id:'m4Labels',afterDatasetsDraw:function(chart){
-var ctx=chart.ctx;ctx.save();ctx.textAlign='center';ctx.textBaseline='bottom';
-chart.data.datasets.forEach(function(ds,i){
-var meta=chart.getDatasetMeta(i);if(meta.hidden)return;
-meta.data.forEach(function(bar,j){var v=ds.data[j];if(v==null)return;
-ctx.font=(i===1?'700 ':'500 ')+'10.5px "DM Sans", sans-serif';ctx.fillStyle=i===1?'#2D4079':'#6A6F8A';
-ctx.fillText(v.toFixed(1),bar.x,bar.y-3);});
-});
-ctx.restore();
-}};
-
-function renderM4PI(members){
-var idSet={};(members||[]).forEach(function(m){idSet[String(m.clientid).trim()]=true;});
-var rows=((G_ALL&&G_ALL.m4pi&&G_ALL.m4pi.rows)||[]).filter(function(r){return idSet[r.clientid]&&r.base&&r.current;});
-var n=rows.length;
-function avg(side,key){var v=rows.map(function(r){return r[side][key];}).filter(function(x){return x!=null&&!isNaN(x);});return v.length?m4r1(v.reduce(function(a,b){return a+b;},0)/v.length):null;}
-function stat(key){var b=avg('base',key),c=avg('current',key);return {b:b,c:c,d:(b!=null&&c!=null)?m4r1(c-b):null,band:m4Band(c)};}
-function chg(d){if(d==null)return'<span style="color:var(--c-muted)">—</span>';var col=d>0?'#1F8F4E':d<0?'#D63B55':'#6A6F8A';return'<span style="color:'+col+';font-weight:700">'+(d>0?'+':'')+d.toFixed(1)+'</span>';}
-function badge(b){return b?'<span class="badge '+b.cls+'">'+b.l+'</span>':'<span class="badge nd">No data</span>';}
-function row(def){var s=stat(def.key);var bold=def.total?'font-weight:800;':'';
-return'<tr'+(def.total?' style="background:rgba(45,64,121,.04)"':'')+'><td style="'+bold+'"><strong>'+esc(def.label)+'</strong></td>'+
-'<td class="mono ctr" style="'+bold+'">'+(s.b!=null?s.b.toFixed(1):'—')+'</td>'+
-'<td class="mono ctr" style="'+bold+'color:#2D4079">'+(s.c!=null?s.c.toFixed(1):'—')+'</td>'+
-'<td class="ctr">'+chg(s.d)+'</td>'+
-'<td class="ctr">'+badge(s.band)+'</td>'+
-'<td style="color:var(--c-muted);font-size:11.5px;max-width:380px">'+esc(def.desc)+'</td></tr>';}
-var nTxt='Cohort average · n='+n+' members with a baseline and a current reading';
-['m4PillarTag','m4LibTag'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=nTxt;});
-
-var tot=stat('m4pi');
-var g=document.getElementById('m4Gauge');
-if(g){
-var bandCol=tot.band?tot.band.c:'#6A6F8A';
-g.innerHTML=m4GaugeSvg(tot.c)+
-'<div style="display:flex;align-items:baseline;gap:4px;margin-top:-6px"><span style="font-size:46px;font-weight:800;color:#2D4079;font-family:var(--mono);line-height:1">'+(tot.c!=null?tot.c.toFixed(1):'—')+'</span><span style="font-size:14px;color:#6A6F8A;font-weight:600">/100</span></div>'+
-'<div style="font-size:13px;color:#373049;margin-top:8px">'+(tot.d!=null?'<strong style="color:'+(tot.d>=0?'#1F8F4E':'#D63B55')+'">'+(tot.d>=0?'+':'')+tot.d.toFixed(1)+'</strong> since baseline ('+tot.b.toFixed(1)+')':'—')+' · <strong style="color:'+bandCol+'">'+(tot.band?tot.band.l:'—')+'</strong></div>'+
-'<div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:14px;font-size:10px;color:#6A6F8A">'+
-'<span><b style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#D63B55;margin-right:4px"></b>0–34</span>'+
-'<span><b style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#E8852C;margin-right:4px"></b>35–54</span>'+
-'<span><b style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#F2B53A;margin-right:4px"></b>55–69</span>'+
-'<span><b style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#8CC152;margin-right:4px"></b>70–84</span>'+
-'<span><b style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#1F8F4E;margin-right:4px"></b>85–100</span></div>';
-}
-var gn=document.getElementById('m4GaugeNote');if(gn)gn.textContent='n='+n+' members';
-
-destroyChart('m4Chart');
-var cv=document.getElementById('m4Chart');
-if(cv){
-var keys=['p1','p2','p3','p4','m4pi'];
-var labels=[['P1','Mito Performance'],['P2','Cellular Resilience'],['P3','Metabolic Markers'],['P4','Adaptive Resilience'],['M4PI','(overall)']];
-charts['m4Chart']=new Chart(cv,{type:'bar',
-data:{labels:labels,datasets:[
-{label:'Baseline',data:keys.map(function(k){return avg('base',k);}),backgroundColor:'rgba(45,64,121,.28)',borderRadius:4,borderSkipped:false},
-{label:'Current',data:keys.map(function(k){return avg('current',k);}),backgroundColor:keys.map(function(k){return k==='m4pi'?'#AD2576':'#2D4079';}),borderRadius:4,borderSkipped:false}]},
-options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:16}},
-plugins:{legend:{display:false},tooltip:{callbacks:{title:function(items){var l=items.length?items[0].chart.data.labels[items[0].dataIndex]:'';return Array.isArray(l)?(l[0]==='M4PI'?'M4PI (overall)':l[0]+': '+l[1]):l;},label:function(c){return c.dataset.label+': '+(c.raw!=null?c.raw.toFixed(1):'—');}}}},
-scales:{x:{grid:{display:false},ticks:{color:'#373049',font:{size:10.5},maxRotation:0,autoSkip:false}},y:{min:0,max:100,grid:{color:'rgba(45,64,121,.08)'},ticks:{color:'#6A6F8A',stepSize:25}}}},
-plugins:[m4LabelPlugin]});
+function overview(){
+var c=HI.crs,pv=HI.prevent;
+set('hiOvKpis',
+kpi('Cardiometabolic Risk Score',f(c.c,1),'Start '+f(c.b,1)+' · '+stageOf(c.c)+' on average · lower is better','0–100, lower is better: ten metabolic markers weighed together. Detail on the Cardiometabolic Risk Score tab.','purple',false,'🫀')+
+kpi('Risk Score Lower Than at Start',f(c.lower),'of '+HI.followup+' members with follow-up blood work','Members whose score has come down since their first blood work.','green',false,'📉')+
+kpi('Stage 3 Members',f(c.stagesC['Stage 3']),'Now · '+c.stagesB['Stage 3']+' at start · score 60 or above','High / advanced stage of the Cardiometabolic Risk Score.','red',false,'📍')+
+kpi('10-Year Heart Risk (PREVENT)',f(pv.c,1)+'%','Start '+f(pv.b,1)+'% · n='+pv.n+' · lower is better','Estimated chance of a heart attack, stroke or heart failure in the next 10 years.','amber',false,'🩺'));
+var sg=c.signals.map(function(s){return'<b>'+e(s.label)+'</b> ('+s.pct+'% elevated)';}).join(', ');
+var st=c.strengths.map(function(s){return'<b>'+e(s.label)+'</b> ('+s.pct+'% optimal)';}).join(', ');
+set('hiInsight','<div><h4>Biggest signal</h4>The markers carrying most of the cohort’s risk now are '+sg+'. Easing insulin resistance and central fat is the clearest early win — it pulls several linked markers down together.</div>'+
+'<div><h4>Already a strength</h4>Optimal for the most members: '+st+' — a base to build on.</div>');
 }
 
-var pt=document.getElementById('m4PillarTbl');
-if(pt)pt.innerHTML=n?M4_PILLARS.map(row).join(''):'<tr><td colspan="6" style="text-align:center;color:var(--c-muted);padding:18px">No M4PI readings yet.</td></tr>';
-var lt=document.getElementById('m4LibTbl');
-if(lt)lt.innerHTML=n?M4_LIBRARY.map(row).join(''):'<tr><td colspan="6" style="text-align:center;color:var(--c-muted);padding:18px">No index readings yet.</td></tr>';
+function habits(){
+var a=HI.eng;
+txt('hiEngNote','First 30 days = each member’s first 30 days on the programme · Latest 30 days = rolling window '+a.from+' to '+a.to+' · members with at least 60 days on the programme (n='+a.n+'). Meal logging and GFY are in the cards above.');
+set('hiEngTbl',a.rows.map(function(r){var u=r.unit==='%'?'%':r.unit?' '+r.unit:'';
+return'<tr><td><strong>'+e(r.label)+'</strong></td><td class="mono ctr">'+f(r.b,r.dec)+u+'</td><td class="mono ctr" style="color:#2D4079;font-weight:600">'+f(r.l,r.dec)+u+'</td>'+
+'<td class="ctr">'+chg(r.b,r.l,r.dec,false)+'</td><td class="mono ctr">'+e(r.target)+'</td><td class="mono ctr">'+r.atB+'% → <strong>'+r.atL+'%</strong></td>'+
+'<td style="min-width:190px">'+sbar(r.status,STATUS,STATUS_COL)+'</td><td class="mono ctr">'+r.n+'</td></tr>';}).join(''));
+set('hiEngLegend',leg(STATUS,STATUS_COL,{'Good':'Good · at or above target','Progressing':'Progressing · 80–99%','Active Focus':'Active Focus · 60–79%','Priority Focus':'Priority Focus · below 60%'}));
+destroyChart('hiEngChart');var cv=document.getElementById('hiEngChart');
+if(cv&&typeof Chart!=='undefined')charts['hiEngChart']=new Chart(cv,{type:'bar',data:{labels:a.rows.map(function(r){return r.label.replace(' (daily average)','').replace(' (main sleep)','');}),
+datasets:[{label:'First 30 days',data:a.rows.map(function(r){return r.atB;}),backgroundColor:'rgba(45,64,121,.28)',borderRadius:4,borderSkipped:false},
+{label:'Latest 30 days',data:a.rows.map(function(r){return r.atL;}),backgroundColor:'#2D4079',borderRadius:4,borderSkipped:false}]},
+options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+c.raw+'% at target';}}}},
+scales:{x:{grid:{display:false},ticks:{color:'#373049',font:{size:10.5},maxRotation:0,autoSkip:false}},y:{min:0,max:100,grid:{color:'rgba(45,64,121,.08)'},ticks:{color:'#6A6F8A',stepSize:25,callback:function(v){return v+'%';}}}}}});
 }
+
+function prevent(){
+var pv=HI.prevent;
+txt('hiPrevTag','n='+pv.n+' with follow-up blood work');
+set('hiPrevCard',mixRow('At start','Average '+f(pv.b,1)+'%',pv.catsB,PCATS,PCAT_COL,'Intermediate or high: '+p(pv.catsB.Intermediate+pv.catsB.High,pv.n)+'%')+
+mixRow('Now','Average '+f(pv.c,1)+'%',pv.catsC,PCATS,PCAT_COL,'Intermediate or high: '+p(pv.catsC.Intermediate+pv.catsC.High,pv.n)+'%')+
+'<div class="hi-legend">'+leg(PCATS,PCAT_COL,{Low:'Low · below 5%',Borderline:'Borderline · 5–7.4%',Intermediate:'Intermediate · 7.5–19.9%',High:'High · 20% or more'})+'</div>');
+}
+
+function crsTab(){
+var c=HI.crs,band=stageOf(c.c),bc=STAGE_COL[band]||'#6A6F8A',d=c.c-c.b;
+set('hiCrsGauge',crsGauge(c.c)+
+'<div style="display:flex;align-items:baseline;gap:4px;margin-top:-6px"><span style="font-size:46px;font-weight:800;color:#2D4079;font-family:var(--mono);line-height:1">'+f(c.c,1)+'</span><span style="font-size:14px;color:#6A6F8A;font-weight:600">/100</span></div>'+
+'<div style="font-size:13px;color:#373049;margin-top:8px"><strong style="color:'+(d<=0?GREEN:RED)+'">'+(d>0?'+':'−')+f(Math.abs(d),1)+'</strong> since the first blood work ('+f(c.b,1)+') · <strong style="color:'+bc+'">'+band+'</strong> · lower is better</div>'+
+'<div class="hi-legend" style="border-top:none;justify-content:center;margin-top:6px">'+leg(STAGES,STAGE_COL,{'Stage 0':'0–14','Stage 1':'15–34','Stage 2':'35–59','Stage 3':'60–100'})+'</div>');
+txt('hiCrsGaugeNote','n='+c.n+' members');
+txt('hiCrsTag','n='+HI.followup+' with follow-up blood work · flag mix for all '+c.n);
+set('hiCrsMix',mixRow('At start','First blood work',c.stagesB,STAGES,STAGE_COL,'Stage 3: '+p(c.stagesB['Stage 3'],c.n)+'%')+
+mixRow('Now','Latest value of each marker',c.stagesC,STAGES,STAGE_COL,'Stage 3: '+p(c.stagesC['Stage 3'],c.n)+'%')+
+'<div class="hi-legend">'+leg(STAGES,STAGE_COL,STAGE_LAB)+'</div>');
+destroyChart('hiCrsChart');var cv=document.getElementById('hiCrsChart');
+if(cv&&typeof Chart!=='undefined')charts['hiCrsChart']=new Chart(cv,{type:'bar',data:{labels:c.rows.map(function(r){return r.label.replace(' circumference','').replace(' cholesterol','').replace('Triglyceride / HDL ratio','TG / HDL').replace(' / SGPT','');}),
+datasets:[{label:'At start',data:c.rows.map(function(r){return p(r.flagsB.Optimal,c.n);}),backgroundColor:'rgba(45,64,121,.28)',borderRadius:4,borderSkipped:false},
+{label:'Now',data:c.rows.map(function(r){return p(r.flagsNow.Optimal,c.n);}),backgroundColor:'#1F8F4E',borderRadius:4,borderSkipped:false}]},
+options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(x){return x.dataset.label+': '+x.raw+'% of members optimal';}}}},
+scales:{x:{grid:{display:false},ticks:{color:'#373049',font:{size:10.5},maxRotation:0,autoSkip:false}},y:{min:0,max:100,grid:{color:'rgba(45,64,121,.08)'},ticks:{color:'#6A6F8A',stepSize:25,callback:function(v){return v+'%';}}}}}});
+set('hiCrsTbl',c.rows.map(function(r){var u=r.unit?(r.unit==='%'?'%':' '+r.unit):'';
+return'<tr><td><strong>'+e(r.label)+'</strong>'+(r.weight>=1.4?' <span class="badge risk" style="margin-left:4px">extra weight</span>':'')+'<span class="hi-sub">'+e(r.desc)+'</span></td>'+
+'<td class="mono ctr">'+f(r.b,r.dec)+'</td><td class="mono ctr" style="color:#2D4079;font-weight:600">'+f(r.c,r.dec)+'</td><td class="ctr">'+chg(r.b,r.c,r.dec,true)+'</td>'+
+'<td class="mono">'+e(r.ref)+e(u)+'</td><td style="min-width:200px">'+sbar(r.flagsNow,FLAG,FLAG_COL)+'<span class="hi-sub">'+mixText(r.flagsNow,FLAG)+'</span></td><td class="mono ctr">'+r.n+'</td></tr>';}).join(''));
+set('hiFlagLegend',leg(FLAG,FLAG_COL,{Optimal:'Optimal · in a healthy range',Watch:'Watch · a little outside the ideal range',Elevated:'Elevated · a priority to work on together'}));
+}
+
+function cohort(){
+set('hiSysMix',HI.systems.map(function(s){return mixRow(s.label,s.basis,s.mix,SYSL,SYS_COL,'Good '+p(s.mix.Good,s.n)+'% · n='+s.n);}).join(''));
+set('hiSysLegend',leg(SYSL,SYS_COL,{Good:'Good · in a good place',Watch:'Watch · worth keeping an eye on',Focus:'Focus · the area to work on next'}));
+set('hiLeanMix',HI.leans.map(function(s){return mixRow(s.label,s.basis,s.mix,LEANS,LEAN_COL,'Low '+p(s.mix.Low,s.n)+'% · n='+s.n);}).join(''));
+set('hiLeanLegend',leg(LEANS,LEAN_COL));
+}
+
+window.renderHI=function(){if(typeof HI==='undefined')return;try{overview();habits();prevent();crsTab();cohort();}catch(err){console.error(err);}};
+})();
 
 var G_ALL={},G_RAW=[],G_SLA=[],G_RAW_FILTERED=[];
 var G_CLINICAL=[],G_EN_MEMBERS=[],G_ADH_MEMBERS=[],G_ADH_FILTERED=[];
@@ -2154,7 +2192,7 @@ G_RAW_FILTERED=G_RAW;
 
 renderFilterableSections(G_RAW);
 
-renderM4PI(G_RAW);
+renderHI();
 renderStartConditions(computeStartConditionsAgg(G_RAW));
 renderMentalFaceTab(G_RAW);
 }
